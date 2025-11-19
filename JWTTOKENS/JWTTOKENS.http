@@ -1,0 +1,6 @@
+@JWTTOKENS_HostAddress = http://localhost:5128
+
+GET {{JWTTOKENS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
