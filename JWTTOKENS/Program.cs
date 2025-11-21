@@ -33,20 +33,39 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "JWTTOKENS API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "JWTTOKENS API",
+        Version = "v1"
+    });
 
-    // Solo lo describe, no lo fuerza
+    // Definición del esquema Bearer
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "AGREGA el token manualmente en cada petición.\nFormato: Bearer <tu_token>",
         Name = "Authorization",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
     });
 
-    // ❌ NO PONEMOS AddSecurityRequirement
-    // Esto permite que el alumno tenga que enviarlo manualmente en el header
+    // Necesario para que aparezcan los candaditos 🔒 en Swagger
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
+
 
 var app = builder.Build();
 
